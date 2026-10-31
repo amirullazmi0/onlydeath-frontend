@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import BrandLogo from '@/components/custom/brand-logo';
 import { footerColumns } from './shop.list';
 
 export default function ShopFooter() {
@@ -6,7 +7,7 @@ export default function ShopFooter() {
         <footer className="bg-white border-t border-black/10">
             <div className="mx-auto max-w-7xl px-4 md:px-8 py-12 grid gap-10 md:grid-cols-4">
                 <div className="md:col-span-2">
-                    <p className="text-2xl font-black tracking-tight">ONLYDEATH</p>
+                    <BrandLogo variant="black" className="h-10 w-auto" />
                     <p className="mt-3 max-w-xs text-sm text-muted-foreground">
                         Streetwear, no compromise. Ready stock ships fast, pre-orders are made just
                         for you.

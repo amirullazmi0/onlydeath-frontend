@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import ProductCard from '@/components/shop/product-card';
 import RemoteImage from '@/components/custom/remote-image';
+import BrandLogo from '@/components/custom/brand-logo';
 import useLanding from './landing.hook';
 import { features, promos, steps } from './landing.list';
 
@@ -48,14 +49,15 @@ export default function LandingView() {
                             <CtaLink href="/catalog">Shop Now</CtaLink>
                         </div>
                     </div>
-                    <p
-                        aria-hidden
-                        className="hidden md:block text-right text-[9rem] leading-none font-black text-white/5 select-none"
-                    >
-                        ONLY
-                        <br />
-                        DEATH
-                    </p>
+                    <div className="hidden md:flex justify-end">
+                        <BrandLogo
+                            variant="skull"
+                            alt=""
+                            loading="eager"
+                            sizes="320px"
+                            className="h-96 w-auto select-none"
+                        />
+                    </div>
                 </div>
             </section>
 

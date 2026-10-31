@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useHydrated } from '@/hooks/useHydrated';
 import { Menu, PackageSearch, ShoppingBag, X } from 'lucide-react';
+import BrandLogo from '@/components/custom/brand-logo';
 import { cartTotals, useCartStore } from '@/stores/cart.store';
 import { useCurrencyStore, useDisplayCurrency } from '@/stores/currency.store';
 import { cn } from '@/lib/utils';
@@ -35,8 +36,8 @@ export default function ShopNavbar() {
                         {open ? <X className="size-5" /> : <Menu className="size-5" />}
                     </button>
 
-                    <Link href="/" className="text-2xl font-black tracking-tight">
-                        ONLYDEATH
+                    <Link href="/">
+                        <BrandLogo variant="black" loading="eager" className="h-7 md:h-9 w-auto" />
                     </Link>
 
                     <nav className="hidden md:flex items-center gap-10">
