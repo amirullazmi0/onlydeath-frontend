@@ -4,7 +4,8 @@ export type ShippingMutationKeys =
     | 'shipping-rates'
     | 'create-shipping-zone'
     | 'update-shipping-zone'
-    | 'delete-shipping-zone';
+    | 'delete-shipping-zone'
+    | 'update-shipping-origin';
 
 export const shippingMutations: MutationDataService<ShippingMutationKeys> = {
     'shipping-rates': {
@@ -25,5 +26,10 @@ export const shippingMutations: MutationDataService<ShippingMutationKeys> = {
         url: '/shipping/zones/:id',
         method: 'DELETE',
         refetchQueries: ['shipping-zones'],
+    },
+    'update-shipping-origin': {
+        url: '/shipping/origin',
+        method: 'PATCH',
+        refetchQueries: ['shipping-origin'],
     },
 };

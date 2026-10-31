@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import BrandLogo from '@/components/custom/brand-logo';
 
 export default function AuthShell({
     title,
@@ -8,8 +9,8 @@ export default function AuthShell({
     return (
         <div className="min-h-screen grid md:grid-cols-2">
             <div className="hidden md:flex bg-black text-white flex-col justify-between p-12">
-                <Link href="/" className="text-2xl font-black tracking-tight">
-                    ONLYDEATH
+                <Link href="/">
+                    <BrandLogo variant="wordmark" loading="eager" sizes="384px" className="w-96 max-w-full h-auto" />
                 </Link>
                 <p className="text-6xl font-black uppercase leading-[0.95]">
                     Admin
@@ -20,8 +21,8 @@ export default function AuthShell({
             </div>
             <div className="flex items-center justify-center p-6">
                 <div className="w-full max-w-sm">
-                    <Link href="/" className="md:hidden text-2xl font-black tracking-tight">
-                        ONLYDEATH
+                    <Link href="/" className="md:hidden block">
+                        <BrandLogo variant="black" loading="eager" className="h-8 w-auto" />
                     </Link>
                     <h1 className="mt-8 md:mt-0 text-2xl font-black uppercase tracking-tight">{title}</h1>
                     {subtitle && <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>}

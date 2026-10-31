@@ -64,6 +64,8 @@ export default function AdminOrderDetailView({ id }: Readonly<{ id: string }>) {
         setRejectReason,
         shipForm,
         setShipForm,
+        uploadDocument,
+        uploadingDocument,
         submit,
         submitting,
     } = useDetailAdminOrder(id);
@@ -202,7 +204,7 @@ export default function AdminOrderDetailView({ id }: Readonly<{ id: string }>) {
                         <p className="text-sm">{order.customerPhone}</p>
                     </Section>
 
-                    <Section title={isIntl ? 'Shipping · International' : 'Shipping · Domestic'}>
+                    <Section title={isIntl ? 'Shipping · International (Manual)' : 'Shipping · Domestic (Biteship)'}>
                         <p className="text-sm">
                             {[
                                 order.address,
@@ -233,6 +235,16 @@ export default function AdminOrderDetailView({ id }: Readonly<{ id: string }>) {
                                 Courier tracking <ExternalLink className="size-3" />
                             </a>
                         )}
+                        {order.shippingDocumentUrl && (
+                            <a
+                                href={order.shippingDocumentUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-2 flex items-center gap-1 text-xs font-bold uppercase underline"
+                            >
+                                <FileText className="size-3" /> Shipping document
+                            </a>
+                        )}
                     </Section>
                 </div>
             </div>
@@ -244,7 +256,7 @@ export default function AdminOrderDetailView({ id }: Readonly<{ id: string }>) {
                         <DialogDescription>
                             {action === 'ship'
                                 ? isIntl
-                                    ? 'Enter the international courier and tracking number. The buyer will be emailed.'
+                                    ? 'Manual shipment: enter the courier, tracking number and shipping document. The buyer will be emailed.'
                                     : `A Biteship pickup will be booked with ${order.courierName}.`
                                 : copy?.description}
                         </DialogDescription>
@@ -285,6 +297,23 @@ export default function AdminOrderDetailView({ id }: Readonly<{ id: string }>) {
                                     className="rounded-none"
                                 />
                             </div>
+                            <div className="space-y-1.5">
+                                <LabelInput>Shipping document (optional)</LabelInput>
+                                <Input
+                                    type="file"
+                                    accept="application/pdf,image/jpeg,image/png"
+                                    onChange={(e) => uploadDocument(e.target.files?.[0])}
+                                    disabled={uploadingDocument}
+                                    className="rounded-none"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    {uploadingDocument
+                                        ? 'Uploading...'
+                                        : shipForm.shipping_document_url
+                                          ? 'Document attached.'
+                                          : 'AWB or customs paperwork. PDF, JPG or PNG, up to 5 MB.'}
+                                </p>
+                            </div>
                         </div>
                     )}
 
@@ -292,7 +321,12 @@ export default function AdminOrderDetailView({ id }: Readonly<{ id: string }>) {
                         <Button variant="outline" onClick={() => setAction(null)} disabled={submitting} className="rounded-none">
                             Cancel
                         </Button>
-                        <Button variant="primary" onClick={submit} disabled={submitting || !canSubmit} className="rounded-none">
+                        <Button
+                            variant="primary"
+                            onClick={submit}
+                            disabled={submitting || uploadingDocument || !canSubmit}
+                            className="rounded-none"
+                        >
                             {submitting ? <Spinner /> : copy?.confirm}
                         </Button>
                     </DialogFooter>

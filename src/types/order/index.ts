@@ -40,6 +40,8 @@ export interface CourierRate {
     /** Minor units of `currency`: IDR for Indonesia, USD cents abroad */
     price: number;
     currency: Currency;
+    /** Abroad only: whole order in rupiah, the amount Midtrans will charge */
+    charge_idr?: number;
 }
 
 export interface CartItemRequest {
@@ -51,6 +53,9 @@ export interface CartItemRequest {
 export interface RatesRequest {
     country_code: string;
     area_id?: string;
+    /** With district: the server checks an Indonesian postal code against the region */
+    city?: string;
+    district?: string;
     postal_code: string;
     items: CartItemRequest[];
 }
@@ -60,6 +65,8 @@ export interface CheckoutRequest {
     customer_email: string;
     customer_phone: string;
     country_code: string;
+    /** IDR for Indonesia, USD everywhere else; the server rejects any other pair */
+    currency: Currency;
     address: string;
     city: string;
     /** Province (ID) or state/province */
@@ -73,6 +80,30 @@ export interface CheckoutRequest {
     courier_code: string;
     courier_service: string;
     items: CartItemRequest[];
+}
+
+export interface CancelOrderRequest {
+    order_no: string;
+    email: string;
+}
+
+export interface CancelOrderResponse {
+    order_no: string;
+    /** Still-available items at today's prices, ready for the cart */
+    cart_items: {
+        product_id: string;
+        size_id?: string;
+        size_label?: string;
+        slug: string;
+        name: string;
+        image_url?: string;
+        price: number;
+        price_usd_cents: number;
+        discount_pct: number;
+        availability: ProductAvailability;
+        stock?: number;
+        quantity: number;
+    }[];
 }
 
 export interface CheckoutResponse {
@@ -196,6 +227,8 @@ export interface Order {
     rejectReason: string | null;
     waybill: string | null;
     trackingUrl: string | null;
+    /** AWB / customs paperwork for manual international shipments */
+    shippingDocumentUrl: string | null;
     paidAt: string | null;
     createdAt: string;
     items: OrderItem[];
@@ -231,4 +264,20 @@ export interface ManualShipRequest {
     courier_name?: string;
     tracking_number?: string;
     tracking_url?: string;
+    shipping_document_url?: string;
+}
+
+/** Sender address used by Biteship; international orders ship manually. */
+export interface ShippingOrigin {
+    contactName: string;
+    phone: string;
+    address: string;
+    postalCode: string;
+}
+
+export interface UpdateShippingOriginRequest {
+    contact_name: string;
+    phone: string;
+    address: string;
+    postal_code: string;
 }

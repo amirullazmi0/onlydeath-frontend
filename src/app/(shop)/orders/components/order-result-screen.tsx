@@ -12,7 +12,7 @@ const variants = {
     pending: {
         icon: Clock,
         title: 'Awaiting Payment',
-        desc: 'Complete your payment before it expires. You can resume the payment from the Track Order page.',
+        desc: 'Complete your payment within 10 minutes of ordering, or the order expires. We emailed you a payment link, or you can resume from the Track Order page.',
     },
     error: {
         icon: XCircle,

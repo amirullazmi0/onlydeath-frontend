@@ -2,6 +2,7 @@ import { MutationDataService } from '../../type';
 
 export type OrdersMutationKeys =
     | 'checkout'
+    | 'cancel-order'
     | 'confirm-order'
     | 'ship-order'
     | 'deliver-order'
@@ -10,6 +11,10 @@ export type OrdersMutationKeys =
 export const ordersMutations: MutationDataService<OrdersMutationKeys> = {
     checkout: {
         url: '/orders/checkout',
+        method: 'POST',
+    },
+    'cancel-order': {
+        url: '/orders/cancel',
         method: 'POST',
     },
     'confirm-order': {

@@ -3,6 +3,7 @@ import useQueryApiRequest from '@/hooks/react-query/useQueryApiRequest';
 import useMutationApiRequest from '@/hooks/react-query/useMutationApiRequest';
 import type { GlobalApiResponse } from '@/types/api/responses';
 import type { ManualShipRequest, Order } from '@/types/order';
+import type { UploadResponse } from '@/types/product';
 
 export type OrderAction = 'confirm' | 'ship' | 'deliver' | 'reject';
 
@@ -13,6 +14,7 @@ export default function useDetailAdminOrder(id: string) {
         courier_name: '',
         tracking_number: '',
         tracking_url: '',
+        shipping_document_url: '',
     });
 
     const { data, isLoading } = useQueryApiRequest<GlobalApiResponse<Order>>({
@@ -31,6 +33,21 @@ export default function useDetailAdminOrder(id: string) {
         options: close,
     });
 
+    const uploadM = useMutationApiRequest<GlobalApiResponse<UploadResponse>, FormData>({
+        key: 'upload-document',
+        options: {
+            onSuccess: (res) =>
+                setShipForm((form) => ({ ...form, shipping_document_url: res?.data.url ?? '' })),
+        },
+    });
+
+    const uploadDocument = (file?: File) => {
+        if (!file) return;
+        const body = new FormData();
+        body.append('file', file);
+        uploadM.mutate(body);
+    };
+
     const order = data?.data;
 
     const submit = () => {
@@ -44,6 +61,7 @@ export default function useDetailAdminOrder(id: string) {
                           courier_name: shipForm.courier_name?.trim(),
                           tracking_number: shipForm.tracking_number?.trim(),
                           tracking_url: shipForm.tracking_url?.trim() || undefined,
+                          shipping_document_url: shipForm.shipping_document_url || undefined,
                       }
                     : {},
             );
@@ -59,6 +77,8 @@ export default function useDetailAdminOrder(id: string) {
         setRejectReason,
         shipForm,
         setShipForm,
+        uploadDocument,
+        uploadingDocument: uploadM.isPending,
         submit,
         submitting: confirmM.isPending || shipM.isPending || deliverM.isPending || rejectM.isPending,
     };

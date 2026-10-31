@@ -10,6 +10,7 @@ import useMutationApiRequest from '@/hooks/react-query/useMutationApiRequest';
 import { useAuthStore } from '@/stores/auth.store';
 import type { GlobalApiResponse } from '@/types/api/responses';
 import type { ChangePasswordRequest } from '@/types/auth';
+import ShippingOriginForm from './components/shipping-origin-form';
 
 const schema = yup.object().shape({
     current_password: yup.string().required('Current password is required'),
@@ -46,6 +47,8 @@ export default function AdminSettingsView() {
                 <p className="mt-3 text-sm font-semibold">{user?.name}</p>
                 <p className="text-sm text-muted-foreground">{user?.email}</p>
             </section>
+
+            <ShippingOriginForm />
 
             <section className="bg-white border border-black/10 p-5">
                 <p className="text-xs font-bold uppercase tracking-widest">Change password</p>

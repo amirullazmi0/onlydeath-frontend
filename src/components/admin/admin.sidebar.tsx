@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
+import BrandLogo from '@/components/custom/brand-logo';
 import { cn } from '@/lib/utils';
 import { adminMenuItems } from './admin.list';
 
@@ -34,8 +35,8 @@ export default function AdminSidebar({ isOpen, onClose }: Readonly<AdminSidebarP
                 )}
             >
                 <div className="h-16 flex items-center justify-between px-5 border-b border-white/10">
-                    <Link href="/admin" className="flex flex-col leading-none">
-                        <span className="text-xl font-black tracking-tight">ONLYDEATH</span>
+                    <Link href="/admin" className="flex flex-col gap-1 leading-none">
+                        <BrandLogo variant="white" loading="eager" className="h-6 w-auto" />
                         <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
                             Admin Panel
                         </span>

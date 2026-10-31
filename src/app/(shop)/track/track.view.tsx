@@ -6,6 +6,14 @@ import { ExternalLink, FileText } from 'lucide-react';
 import { Input, LabelInput } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { cn, formatPrice } from '@/lib/utils';
 import type { OrderStatus } from '@/types/order';
 import { LineTotal } from '@/components/shop/price';
@@ -15,7 +23,17 @@ const PROGRESS: OrderStatus[] = ['PENDING_PAYMENT', 'PAID', 'CONFIRMED', 'SHIPPE
 const PROGRESS_LABEL = ['Placed', 'Paid', 'Confirmed', 'Shipped', 'Delivered'];
 
 export default function TrackView() {
-    const { form, onSubmit, order, isFetching, payNow } = useTrack();
+    const {
+        form,
+        onSubmit,
+        order,
+        isFetching,
+        payNow,
+        cancelOpen,
+        setCancelOpen,
+        cancelOrder,
+        cancelling,
+    } = useTrack();
     const {
         register,
         formState: { errors },
@@ -77,10 +95,19 @@ export default function TrackView() {
                                 {order.payment && (
                                     <Button
                                         onClick={payNow}
+                                        variant="primary"
+                                        className="rounded-none text-xs font-bold tracking-widest uppercase"
+                                    >
+                                        Pay Now
+                                    </Button>
+                                )}
+                                {order.status === 'PENDING_PAYMENT' && (
+                                    <Button
+                                        onClick={() => setCancelOpen(true)}
                                         variant="outline"
                                         className="rounded-none border-black text-xs font-bold tracking-widest uppercase"
                                     >
-                                        Continue Payment
+                                        Cancel Order
                                     </Button>
                                 )}
                                 <Button
@@ -263,6 +290,36 @@ export default function TrackView() {
                     </section>
                 </div>
             )}
+
+            <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
+                <DialogContent className="sm:max-w-md rounded-none">
+                    <DialogHeader>
+                        <DialogTitle>Cancel this order?</DialogTitle>
+                        <DialogDescription>
+                            Any payment code for this order stops working. Your items go back to your
+                            cart, so you can check out again with another payment method.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setCancelOpen(false)}
+                            disabled={cancelling}
+                            className="rounded-none"
+                        >
+                            Keep Order
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={cancelOrder}
+                            disabled={cancelling}
+                            className="rounded-none"
+                        >
+                            {cancelling ? <Spinner /> : 'Cancel Order'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
