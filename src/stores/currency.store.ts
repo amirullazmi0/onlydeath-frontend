@@ -1,11 +1,19 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import type { Currency } from '@/lib/utils';
 import type { Product } from '@/types/product';
 import { useHydrated } from '@/hooks/useHydrated';
 
-/** Store-wide default; buyers can switch, and checkout follows the shipping country. */
+/** Used on the server and for the first client render, before the timezone is known. */
 export const DEFAULT_CURRENCY: Currency = 'USD';
+
+const INDONESIA_TIMEZONES = ['Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura'];
+
+/** Buyers in Indonesia see IDR, everyone else USD. */
+const detectCurrency = (): Currency => {
+    if (typeof window === 'undefined') return DEFAULT_CURRENCY;
+    const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
+    return INDONESIA_TIMEZONES.includes(timeZone) ? 'IDR' : 'USD';
+};
 
 interface CurrencyState {
     currency: Currency;
@@ -13,16 +21,10 @@ interface CurrencyState {
 }
 
 /** Display currency for buyers. Checkout overrides it from the shipping country. */
-export const useCurrencyStore = create<CurrencyState>()(
-    persist(
-        (set) => ({
-            currency: DEFAULT_CURRENCY,
-            setCurrency: (currency) => set({ currency }),
-        }),
-        // v2: default changed to USD; drops the old auto-guessed value once
-        { name: 'onlydeath-currency', version: 2 },
-    ),
-);
+export const useCurrencyStore = create<CurrencyState>()((set) => ({
+    currency: detectCurrency(),
+    setCurrency: (currency) => set({ currency }),
+}));
 
 /** Product unit price in minor units of the given currency. */
 export const priceIn = (p: Pick<Product, 'price' | 'priceUsdCents'>, currency: Currency) =>
