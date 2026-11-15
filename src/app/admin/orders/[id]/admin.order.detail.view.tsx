@@ -49,7 +49,7 @@ const DIALOG_COPY: Record<OrderAction, { title: string; description: string; con
     reject: {
         title: 'Reject order?',
         description:
-            'Stock is restored and the buyer is emailed. Refund the payment manually from the Midtrans dashboard.',
+            'Stock is restored and the buyer is emailed. Refund the payment manually from the payment gateway dashboard.',
         confirm: 'Reject Order',
     },
 };

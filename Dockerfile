@@ -10,8 +10,6 @@ RUN yarn install --frozen-lockfile --network-timeout 600000
 COPY . .
 
 # NEXT_PUBLIC_* is baked into the browser bundle, so it has to exist at build time
-ARG NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION=false
-ENV NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION=$NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION
 
 RUN yarn build
 

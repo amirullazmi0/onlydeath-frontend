@@ -31,5 +31,7 @@ export interface FinanceSummary {
     pending_payment_total: number;
     pending_payment_count: number;
     by_method: { payment_type: string; total: number; count: number }[];
-    midtrans_dashboard_url: string;
+    /** "Mayar" or "Midtrans", whichever PAYMENT_GATEWAY selects */
+    gateway_name: string;
+    gateway_dashboard_url: string;
 }

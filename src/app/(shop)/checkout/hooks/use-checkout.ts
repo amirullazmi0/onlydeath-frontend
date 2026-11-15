@@ -5,7 +5,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'sonner';
 import useMutationApiRequest from '@/hooks/react-query/useMutationApiRequest';
 import { useIndonesiaRegions, type RegionOption } from '@/hooks/useIndonesiaRegions';
-import { openMidtransSnap } from '@/lib/midtrans';
 import { cartTotals, useCartStore } from '@/stores/cart.store';
 import { useCurrencyStore } from '@/stores/currency.store';
 import type { Currency } from '@/lib/utils';
@@ -134,7 +133,7 @@ export default function useCheckout() {
 
     const selectedRate = rates.find((r) => courierKey(r) === form.watch('courier_key'));
 
-    // ---- Checkout + Midtrans ----
+    // ---- Checkout + payment gateway ----
     const checkoutMutation = useMutationApiRequest<GlobalApiResponse<CheckoutResponse>, CheckoutRequest>({
         key: 'checkout',
         config: { showLoading: true, successNotification: false, errorNotification: true },
@@ -154,25 +153,17 @@ export default function useCheckout() {
                 items: cartItems,
             },
             {
-                onSuccess: async (res) => {
-                    const { order_no, snap_token, client_key } = res.data;
+                onSuccess: (res) => {
+                    const { order_no, payment_url } = res.data;
                     // The order exists now; the cart is no longer needed
                     clear();
-                    const go = (path: string) => router.push(`${path}?order_no=${order_no}`);
-                    try {
-                        await openMidtransSnap(snap_token, client_key, {
-                            onSuccess: () => go('/orders/success'),
-                            onPending: () => go('/orders/pending'),
-                            onError: () => go('/orders/error'),
-                            onClose: () => {
-                                toast.info('Payment not finished yet. You can continue from the Track Order page.');
-                                go('/orders/pending');
-                            },
-                        });
-                    } catch {
-                        toast.error('Could not open the payment window');
-                        go('/orders/pending');
+                    if (payment_url) {
+                        // The gateway hosts the payment page and sends the buyer back to /orders/success
+                        window.location.assign(payment_url);
+                        return;
                     }
+                    toast.error('Could not open the payment page');
+                    router.push(`/orders/pending?order_no=${order_no}`);
                 },
             },
         );

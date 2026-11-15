@@ -33,12 +33,12 @@ export default function AdminFinanceView() {
         <div className="space-y-6">
             <AdminPageHeader
                 title="Finance & Payout"
-                description="Payments settle into your Midtrans balance. Withdrawals are made from the Midtrans dashboard."
+                description={`Payments settle into your ${f?.gateway_name ?? 'payment gateway'} balance. Withdrawals are made from its dashboard.`}
                 action={
                     f && (
                         <Button asChild variant="primary" className="rounded-none text-xs font-bold uppercase tracking-wider">
-                            <a href={f.midtrans_dashboard_url} target="_blank" rel="noreferrer">
-                                Open Midtrans Dashboard <ExternalLink />
+                            <a href={f.gateway_dashboard_url} target="_blank" rel="noreferrer">
+                                Open {f.gateway_name} Dashboard <ExternalLink />
                             </a>
                         </Button>
                     )
@@ -96,10 +96,10 @@ export default function AdminFinanceView() {
                         <section className="bg-black text-white p-5">
                             <p className="text-xs font-bold uppercase tracking-widest">How to withdraw</p>
                             <ol className="mt-4 space-y-2 text-sm text-neutral-300 list-decimal list-inside">
-                                <li>Open the Midtrans dashboard and sign in.</li>
-                                <li>Check your available balance (settled payments minus Midtrans fees).</li>
-                                <li>Withdraw to the bank account registered with Midtrans.</li>
-                                <li>Process refunds for rejected orders from the transaction detail page.</li>
+                                <li>Open the {f.gateway_name} dashboard and sign in.</li>
+                                <li>Check your available balance (settled payments minus {f.gateway_name} fees).</li>
+                                <li>Withdraw to the bank account registered with {f.gateway_name}.</li>
+                                <li>Refund rejected orders to the buyer from the dashboard or by bank transfer.</li>
                             </ol>
                             <p className="mt-4 text-xs text-neutral-500">
                                 Pending payments: {formatPrice(f.pending_payment_total)} ({f.pending_payment_count} orders) are not

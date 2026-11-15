@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import { toast } from 'sonner';
 import useMutationApiRequest from '@/hooks/react-query/useMutationApiRequest';
 import useQueryApiRequest from '@/hooks/react-query/useQueryApiRequest';
-import { openMidtransSnap } from '@/lib/midtrans';
 import { useCartStore } from '@/stores/cart.store';
 import type { GlobalApiResponse } from '@/types/api/responses';
 import type { CancelOrderRequest, CancelOrderResponse, TrackOrderResponse } from '@/types/order';
@@ -49,19 +48,12 @@ export default function useTrack() {
 
     const order = query ? data?.data : undefined;
 
-    const payNow = async () => {
-        if (!order?.payment) return;
-        const { snap_token, client_key } = order.payment;
-        const go = (path: string) => router.push(`${path}?order_no=${order.order_no}`);
-        try {
-            await openMidtransSnap(snap_token, client_key, {
-                onSuccess: () => go('/orders/success'),
-                onPending: () => refetch(),
-                onError: () => go('/orders/error'),
-            });
-        } catch {
-            toast.error('Could not open the payment window');
+    const payNow = () => {
+        if (!order?.payment?.payment_url) {
+            toast.error('Could not open the payment page');
+            return;
         }
+        window.location.assign(order.payment.payment_url);
     };
 
     const cancelMutation = useMutationApiRequest<GlobalApiResponse<CancelOrderResponse>, CancelOrderRequest>({

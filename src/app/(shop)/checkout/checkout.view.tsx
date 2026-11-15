@@ -542,7 +542,7 @@ export default function CheckoutView() {
                     )}
                     {currency === 'USD' && (
                         <p className="mt-4 text-xs text-muted-foreground">
-                            Card payment only (Visa or Mastercard). Midtrans processes it in IDR at
+                            Pay by card (Visa or Mastercard) on the payment page. It is processed in IDR at
                             today&apos;s exchange rate, so the payment page shows the IDR amount.
                             Your bank converts it to your card&apos;s currency and may apply its
                             own rate or fees.

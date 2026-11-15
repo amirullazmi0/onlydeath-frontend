@@ -203,7 +203,7 @@ export default function TrackView() {
                                 </div>
                                 {order.currency === 'USD' && (
                                     <p className="text-xs text-muted-foreground">
-                                        Charged as {formatPrice(order.charge_total, 'IDR')} via Midtrans.
+                                        Charged as {formatPrice(order.charge_total, 'IDR')}.
                                     </p>
                                 )}
                             </div>
