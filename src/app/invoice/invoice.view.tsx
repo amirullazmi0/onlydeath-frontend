@@ -244,7 +244,7 @@ export default function InvoiceView() {
                         </div>
                         {o.currency === 'USD' && (
                             <p className="mt-1 text-[11px] text-neutral-500">
-                                Charged as {formatPrice(o.charge_total, 'IDR')} via Midtrans (1 USD
+                                Charged as {formatPrice(o.charge_total, 'IDR')} (1 USD
                                 = {Number(o.exchange_rate).toLocaleString('en-US')} IDR)
                             </p>
                         )}
@@ -257,7 +257,7 @@ export default function InvoiceView() {
                                 <p className="text-[13px] font-bold">Payment Method</p>
                                 <p className="text-neutral-600">
                                     <b className="text-black">Paid via:</b>{' '}
-                                    {o.payment_method ?? (unpaid ? 'Not paid yet' : 'Midtrans')}
+                                    {o.payment_method ?? (unpaid ? 'Not paid yet' : 'Online payment')}
                                 </p>
                                 <p className="text-neutral-600">
                                     <b className="text-black">Order no.:</b> {o.order_no}

@@ -40,7 +40,7 @@ export interface CourierRate {
     /** Minor units of `currency`: IDR for Indonesia, USD cents abroad */
     price: number;
     currency: Currency;
-    /** Abroad only: whole order in rupiah, the amount Midtrans will charge */
+    /** Abroad only: whole order in rupiah, the amount the payment gateway will charge */
     charge_idr?: number;
 }
 
@@ -108,9 +108,8 @@ export interface CancelOrderResponse {
 
 export interface CheckoutResponse {
     order_no: string;
-    snap_token: string;
-    redirect_url: string | null;
-    client_key: string;
+    /** Hosted payment page (Mayar or Midtrans) */
+    payment_url: string;
 }
 
 export interface TrackingHistory {
@@ -158,7 +157,7 @@ export interface TrackOrderResponse {
     /** subtotal/shipping/total/item prices are in this currency */
     currency: Currency;
     discount_total: number;
-    /** IDR amount actually charged by Midtrans */
+    /** IDR amount actually charged by the payment gateway */
     charge_total: number;
     reject_reason: string | null;
     created_at: string;
@@ -174,7 +173,7 @@ export interface TrackOrderResponse {
         availability: ProductAvailability;
     }[];
     logs: { status: OrderStatus; note: string | null; created_at: string }[];
-    payment: { snap_token: string; redirect_url: string | null; client_key: string } | null;
+    payment: { payment_url: string } | null;
     tracking: {
         status: string;
         waybill_id: string;

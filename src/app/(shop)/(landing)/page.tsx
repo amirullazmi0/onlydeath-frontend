@@ -49,8 +49,6 @@ export default function Page() {
                     sizes="(min-width: 768px) 560px, 80vw"
                     className="h-[60vh] md:h-[78vh] w-auto select-none [filter:url(#skull-raw)]"
                 />
-                <span className={`${STRIP} left-[-6%] top-[14%] -rotate-3`}>Wear it.</span>
-                <span className={`${STRIP} right-[-6%] bottom-[16%] rotate-2`}>Own it.</span>
             </Link>
         </section>
     );
